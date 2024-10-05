@@ -78,9 +78,11 @@ class Decoder(DecodeModel):
         self.fusion = FusionModule(d_model)
         self.exp_proj = nn.Linear(d_model, vocab_size)
         self.imp_proj = nn.Sequential(
-            nn.ReLU(), nn.Linear(d_model, vocab_size))
+            nn.ReLU(),
+            nn.Linear(d_model, vocab_size))
         self.fusion_proj = nn.Sequential(
-            nn.ReLU(inplace=True), nn.Linear(d_model, vocab_size))
+            nn.ReLU(inplace=True),
+            nn.Linear(d_model, vocab_size))
 
     def _build_attention_mask(self, length):
         # lazily create causal attention mask, with full attention between the vision tokens
