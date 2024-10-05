@@ -79,7 +79,7 @@ class Decoder(DecodeModel):
         self.exp_proj = nn.Linear(d_model, vocab_size)
 
         self.imp_proj = nn.Sequential(
-            nn.ReLU(),
+            nn.GELU(),
             nn.Linear(d_model, vocab_size))
         self.fusion_proj = nn.Sequential(
             nn.ReLU(inplace=True),
