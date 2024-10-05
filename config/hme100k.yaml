@@ -20,7 +20,7 @@ trainer:
 
 wandb:
   name: "..."
-  project: "SwinARM"
+  project: "ical"
   log_model: "all"
 
 
