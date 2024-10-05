@@ -85,6 +85,7 @@ def train(config: Config):
         callbacks=[lr_callback, checkpoint_callback, lasted_checkpoint_callback],
     )
 
+    model_module.summarize()
     trainer.fit(model_module, data_module)
 
 

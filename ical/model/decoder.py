@@ -77,6 +77,7 @@ class Decoder(DecodeModel):
         self.SCCM = SCCM(d_model)
         self.fusion = FusionModule(d_model)
         self.exp_proj = nn.Linear(d_model, vocab_size)
+
         self.imp_proj = nn.Sequential(
             nn.ReLU(),
             nn.Linear(d_model, vocab_size))
