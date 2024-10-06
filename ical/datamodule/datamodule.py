@@ -128,10 +128,9 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
-# ======================= Resize and convert to RBG ===================================
+# ======================= Resize ===================================
 #     for i in range(len(images_x)):
 #         images_x[i] = images_x[i].resize((224, 224))
-#         images_x[i] = images_x[i].convert("RGB")
 # =====================================================================================
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
@@ -146,7 +145,6 @@ def collate_fn(batch):
         x[idx, :, : heights_x[idx], : widths_x[idx]] = s_x
         x_mask[idx, : heights_x[idx], : widths_x[idx]] = 0
 
-    # return fnames, x, x_mask, seqs_y
     return Batch(fnames, x, x_mask, seqs_y)
 
 
@@ -224,6 +222,7 @@ class HMEDatamodule(pl.LightningDataModule):
             shuffle=True,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
+            pin_memory=True,
         )
 
     def val_dataloader(self):
@@ -232,6 +231,7 @@ class HMEDatamodule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
+            pin_memory=True,
         )
 
     def test_dataloader(self):
@@ -240,4 +240,5 @@ class HMEDatamodule(pl.LightningDataModule):
             shuffle=False,
             num_workers=self.num_workers,
             collate_fn=collate_fn,
+            pin_memory=True,
         )
