@@ -28,7 +28,8 @@ class ICAL(pl.LightningModule):
         super().__init__()
 
         self.encoder = SwinV1Encoder(
-
+            d_model=d_model,
+            requires_grad=True,
         )
         self.decoder = Decoder(
             d_model=d_model,

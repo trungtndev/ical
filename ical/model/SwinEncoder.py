@@ -7,7 +7,7 @@ from timm.models.swin_transformer import SwinTransformer
 class SwinV1Encoder(pl.LightningModule):
     def __init__(self,
                  d_model: int,
-                 requires_grad,
+                 requires_grad=True,
                  drop_rate=0.1,
                  proj_drop_rate=0.1,
                  attn_drop_rate=0.1,
