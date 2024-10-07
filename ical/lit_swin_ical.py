@@ -8,7 +8,7 @@ import torch.optim as optim
 from torch import FloatTensor, LongTensor
 
 from ical.datamodule import Batch, vocab
-from ical.model.ical import ICAL
+from ical.model.swin_ical import ICAL
 from ical.utils.utils import (
     ExpRateRecorder, Hypothesis, ce_loss, to_bi_tgt_out, plicit_tgt_out)
 

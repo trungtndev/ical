@@ -10,14 +10,12 @@ from torch import FloatTensor, LongTensor
 from torch.utils.data.dataloader import DataLoader
 
 from ical.datamodule.dataset import HMEDataset
-
+import cv2
 from .vocab import vocab
 
 Data = List[Tuple[str, np.ndarray, List[str]]]
 
 # load data
-
-
 def data_iterator(
     data: Data,
     batch_size: int,
@@ -95,6 +93,9 @@ def extract_data(folder: str, dir_name: str) -> Data:
         img_name = tmp[0]
         formula = tmp[1:]
         img = images[img_name]
+        # ========= Resize image to 224x224 =========
+        img = cv2.resize(img, (224, 224)) / 255.0
+        # ==========================================
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
@@ -128,10 +129,6 @@ def collate_fn(batch):
     images_x = batch[1]
     seqs_y = [vocab.words2indices(x) for x in batch[2]]
 
-# ======================= Resize ===================================
-#     for i in range(len(images_x)):
-#         images_x[i] = images_x[i].resize((224, 224))
-# =====================================================================================
     heights_x = [s.size(1) for s in images_x]
     widths_x = [s.size(2) for s in images_x]
 
