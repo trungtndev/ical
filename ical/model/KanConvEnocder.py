@@ -37,7 +37,7 @@ class KanConv(nn.Module):
 
 
 class KanConvEncoder(pl.LightningModule):
-    def __init__(self, d_model: int, num_layers=[2, 4, 8]):
+    def __init__(self, d_model: int, num_layers=[2, 4, 6]):
         super(KanConvEncoder, self).__init__()
         n1, n2, n3 = num_layers
         self.kan_conv = KanConv(num_layers)
