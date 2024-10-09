@@ -9,37 +9,41 @@ from .pos_enc import ImgPosEnc
 
 
 class KanConv(nn.Module):
-    def __init__(self):
+    def __init__(self, num_layers=[2, 4, 6]):
         super(KanConv, self).__init__()
+
+        n1, n2, n3 = num_layers
+
         self.kan_conv = nn.Sequential(
-            KAN_Convolutional_Layer(n_convs=2, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2),
-            torch.nn.AvgPool2d(kernel_size=(3, 3)),
-
-            KAN_Convolutional_Layer(n_convs=4, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2*4),
+            KAN_Convolutional_Layer(n_convs=n1, kernel_size=(2, 2), padding=(1, 1)),
+            nn.BatchNorm2d(n1),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
 
-            KAN_Convolutional_Layer(n_convs=6, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2*4*6),
+            KAN_Convolutional_Layer(n_convs=n2, kernel_size=(2, 2), padding=(1, 1)),
+            nn.BatchNorm2d(n1 * n2),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
 
-            KAN_Convolutional_Layer(n_convs=8, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2*4*6*8),
+            KAN_Convolutional_Layer(n_convs=n3, kernel_size=(2, 2), padding=(1, 1)),
+            nn.BatchNorm2d(n1 * n2 * n3),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
+
+            # KAN_Convolutional_Layer(n_convs=5, kernel_size=(2, 2), padding=(1, 1)),
+            # nn.BatchNorm2d(2 * 3 * 4 * 5),
+            # torch.nn.AvgPool2d(kernel_size=(2, 2)),
         )
 
     def forward(self, x, mask):
-        return self.kan_conv(x), mask[:, 0::4, 0::4][:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
+        return self.kan_conv(x), mask[:, 0::2, 0::2][:, 0::2, 0::2][:, 0::2, 0::2]
 
 
 class KanConvEncoder(pl.LightningModule):
-    def __init__(self, d_model: int):
+    def __init__(self, d_model: int, num_layers=[2, 4, 6]):
         super(KanConvEncoder, self).__init__()
-        self.kan_conv = KanConv()
+        n1, n2, n3 = num_layers
+        self.kan_conv = KanConv(num_layers)
 
         self.feature_proj = nn.Conv2d(
-            2*4*6*8, d_model, kernel_size=1)
+            n1 * n2 * n3, d_model, kernel_size=1)
 
         self.pos_enc_2d = ImgPosEnc(d_model, normalize=True)
 
