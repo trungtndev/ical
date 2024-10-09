@@ -10,26 +10,33 @@ from .decoder import Decoder
 from .SwinEncoder import SwinV1Encoder
 
 
-class ICAL(pl.LightningModule):
+class SwinICAL(pl.LightningModule):
     def __init__(
-        self,
-        d_model: int,
-        growth_rate: int,
-        num_layers: int,
-        nhead: int,
-        num_decoder_layers: int,
-        dim_feedforward: int,
-        dropout: float,
-        dc: int,
-        cross_coverage: bool,
-        self_coverage: bool,
-        vocab_size: int = 114,
+            self,
+            d_model: int,
+            requires_grad: bool,
+            drop_rate: float,
+            proj_drop_rate: float,
+            attn_drop_rate: float,
+            drop_path_rate: float,
+            nhead: int,
+            num_decoder_layers: int,
+            dim_feedforward: int,
+            dropout: float,
+            dc: int,
+            cross_coverage: bool,
+            self_coverage: bool,
+            vocab_size: int = 114,
     ):
         super().__init__()
 
         self.encoder = SwinV1Encoder(
             d_model=d_model,
-            requires_grad=True,
+            requires_grad=requires_grad,
+            drop_rate=drop_rate,
+            proj_drop_rate=proj_drop_rate,
+            attn_drop_rate=attn_drop_rate,
+            drop_path_rate=drop_path_rate,
         )
         self.decoder = Decoder(
             d_model=d_model,
@@ -44,7 +51,7 @@ class ICAL(pl.LightningModule):
         )
 
     def forward(
-        self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
+            self, img: FloatTensor, img_mask: LongTensor, tgt: LongTensor
     ) -> FloatTensor:
         """run img and bi-tgt
 
@@ -71,15 +78,15 @@ class ICAL(pl.LightningModule):
         return exp_out, imp_out, fusion_out
 
     def beam_search(
-        self,
-        img: FloatTensor,
-        img_mask: LongTensor,
-        beam_size: int,
-        max_len: int,
-        alpha: float,
-        early_stopping: bool,
-        temperature: float,
-        **kwargs,
+            self,
+            img: FloatTensor,
+            img_mask: LongTensor,
+            beam_size: int,
+            max_len: int,
+            alpha: float,
+            early_stopping: bool,
+            temperature: float,
+            **kwargs,
     ) -> List[Hypothesis]:
         """run bi-direction beam search for given img
 

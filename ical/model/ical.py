@@ -8,6 +8,7 @@ from ical.utils.utils import Hypothesis
 
 from .decoder import Decoder
 from .encoder import Encoder
+from .KanConvEnocder import KanConvEncoder
 
 
 class ICAL(pl.LightningModule):
@@ -27,8 +28,8 @@ class ICAL(pl.LightningModule):
     ):
         super().__init__()
 
-        self.encoder = Encoder(
-            d_model=d_model, growth_rate=growth_rate, num_layers=num_layers
+        self.encoder = KanConvEncoder(
+            d_model=d_model,
         )
         self.decoder = Decoder(
             d_model=d_model,

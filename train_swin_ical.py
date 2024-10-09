@@ -2,7 +2,7 @@ from pytorch_lightning.plugins.training_type.ddp import DDPPlugin
 import pytorch_lightning as pl
 
 from ical.datamodule import HMEDatamodule
-from ical.lit_swin_ical import LitICAL
+from ical.lit_swin_ical import LitSwinICAL
 
 import argparse
 from sconf import Config
@@ -10,11 +10,14 @@ from pytorch_lightning.loggers import WandbLogger as Logger
 
 
 def train(config: Config):
-    model_module = LitICAL(
+    model_module = LitSwinICAL(
         d_model=config.model.d_model,
         # encoder
-        growth_rate=config.model.growth_rate,
-        num_layers=config.model.num_layers,
+        requires_grad=config.model.requires_grad,
+        drop_rate=config.model.drop_rate,
+        proj_drop_rate=config.model.proj_drop_rate,
+        attn_drop_rate=config.model.attn_drop_rate,
+        drop_path_rate=config.model.drop_path_rate,
         # decoder
         nhead=config.model.nhead,
         num_decoder_layers=config.model.num_decoder_layers,

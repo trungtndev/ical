@@ -8,18 +8,22 @@ import torch.optim as optim
 from torch import FloatTensor, LongTensor
 
 from ical.datamodule import Batch, vocab
-from ical.model.swin_ical import ICAL
+from ical.model.swin_ical import SwinICAL
 from ical.utils.utils import (
     ExpRateRecorder, Hypothesis, ce_loss, to_bi_tgt_out, plicit_tgt_out)
 
 
-class LitICAL(pl.LightningModule):
+class LitSwinICAL(pl.LightningModule):
     def __init__(
             self,
             d_model: int,
             # encoder
-            growth_rate: int,
-            num_layers: int,
+            requires_grad: bool,
+            drop_rate,
+            proj_drop_rate,
+            attn_drop_rate,
+            drop_path_rate,
+
             # decoder
             nhead: int,
             num_decoder_layers: int,
@@ -44,10 +48,15 @@ class LitICAL(pl.LightningModule):
         super().__init__()
         self.save_hyperparameters()
 
-        self.ical_model = ICAL(
+        self.ical_model = SwinICAL(
             d_model=d_model,
-            growth_rate=growth_rate,
-            num_layers=num_layers,
+
+            requires_grad=requires_grad,
+            drop_rate=drop_rate,
+            proj_drop_rate=proj_drop_rate,
+            attn_drop_rate=attn_drop_rate,
+            drop_path_rate=drop_path_rate,
+
             nhead=nhead,
             num_decoder_layers=num_decoder_layers,
             dim_feedforward=dim_feedforward,
