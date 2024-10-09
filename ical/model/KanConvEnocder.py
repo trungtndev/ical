@@ -20,12 +20,12 @@ class KanConv(nn.Module):
             nn.BatchNorm2d(2*4),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
 
-            KAN_Convolutional_Layer(n_convs=8, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2*4*8),
+            KAN_Convolutional_Layer(n_convs=6, kernel_size=(3, 3)),
+            nn.BatchNorm2d(2*4*6),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
 
-            KAN_Convolutional_Layer(n_convs=12, kernel_size=(3, 3)),
-            nn.BatchNorm2d(2*4*8*12),
+            KAN_Convolutional_Layer(n_convs=8, kernel_size=(3, 3)),
+            nn.BatchNorm2d(2*4*6*8),
             torch.nn.AvgPool2d(kernel_size=(2, 2)),
         )
 
@@ -39,7 +39,7 @@ class KanConvEncoder(pl.LightningModule):
         self.kan_conv = KanConv()
 
         self.feature_proj = nn.Conv2d(
-            2*4*8*12, d_model, kernel_size=1)
+            2*4*6*8, d_model, kernel_size=1)
 
         self.pos_enc_2d = ImgPosEnc(d_model, normalize=True)
 
