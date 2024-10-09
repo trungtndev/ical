@@ -94,8 +94,9 @@ def extract_data(folder: str, dir_name: str) -> Data:
         formula = tmp[1:]
         img = images[img_name]
         # ========= Resize image to 224x224 =========
-        # img = cv2.resize(img, (224, 224)) / 255.0
+        # img = cv2.resize(img, (224, 224))
         # ==========================================
+        img = img / 255.0
         data.append((img_name, img, formula))
 
     print(f"Extract data from: {dir_name}, with data size: {len(data)}")
