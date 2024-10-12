@@ -67,7 +67,6 @@ def train(config: Config):
     )
 
     checkpoint_callback = pl.callbacks.ModelCheckpoint(
-        dirpath="lightning_logs",
         save_top_k=config.trainer.callbacks[1].init_args.save_top_k,
         monitor=config.trainer.callbacks[1].init_args.monitor,
         mode=config.trainer.callbacks[1].init_args.mode,
